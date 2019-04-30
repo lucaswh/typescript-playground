@@ -6,7 +6,9 @@
   <base id="base" href="">
   <title>TypeScript Playground</title>
   <link rel="icon" href="assets/favicon.ico">
-  <link rel="stylesheet" href="style.css?v=<!-- @echo VERSION -->">
+  <link rel="stylesheet" href="style.css?v=1.6.4">
+  <p/>
+  <button id="run-code"><span id="run-text">Run in new window</span> (ctrl+r)</button>
 </head>
 
 <body>
@@ -111,22 +113,31 @@
   </div>
   <div id="playground" class="grid grid-pad">
     <div class="col-1-2 editor-container">
+      <p>TYPESCRIPT</p>
       <div class="editor" id="editor-ts"></div>
     </div>
     <div class="col-1-2 editor-container">
+      <p>JAVASCRIPT (generated)</p>
       <div id="processing">
         <div class="spinner">
           <div class="double-bounce1"></div>
           <div class="double-bounce2"></div>
         </div>
       </div>
-      <div class="editor-footer" id="run-code"><span id="run-text">Run in new window</span> (ctrl+r)</div>
       <div class="editor" id="editor-js"></div>
+    </div>
+    <div class="col-1-2 editor-container">
+      <p>HTML</p>
+      <div class="editor" id="editor-html"></div>
+    </div>
+    <div class="col-1-2 editor-container">
+      <p>LESS</p>
+      <div class="editor" id="editor-less"></div>
     </div>
   </div>
 
-  <script src="<!-- @echo MONACO_LOADER -->?v=<!-- @echo VERSION -->"></script>
-  <script src="<!-- @echo BUNDLE_NAME -->?v=<!-- @echo VERSION -->"></script>
+  <script src="https://unpkg.com/monaco-editor@^0.14.3/min/vs/loader.js?v=1.6.4"></script>
+  <script src="app.js?v=1.6.4"></script>
 </body>
 
 </html>

@@ -40,6 +40,8 @@ interface HashValue {
 
 let tsEditor: monaco.editor.IStandaloneCodeEditor;
 let jsEditor: monaco.editor.IStandaloneCodeEditor;
+let htmlEditor: monaco.editor.IStandaloneCodeEditor;
+let lessEditor: monaco.editor.IStandaloneCodeEditor;
 let runWindow: Window;
 
 const runWindowCodeConsole = prepareWindowCode(runWindowHtmlConsole);
@@ -48,6 +50,8 @@ const runWindowCodePlain = prepareWindowCode(runWindowHtmlPlain);
 const _tsVersion = document.getElementById('ts-version');
 const _editorJs = document.getElementById('editor-js');
 const _editorTs = document.getElementById('editor-ts');
+const _editorHtml = document.getElementById('editor-html');
+const _editorLess = document.getElementById('editor-less');
 const _runCode = document.getElementById('run-code');
 const _runText = document.getElementById('run-text')
 const _loading = document.getElementById('loading');
@@ -108,16 +112,82 @@ function bootstrap(): void {
 
 function init(editor: any): void {
   _tsVersion.innerText = '/* @echo TYPESCRIPT_VERSION */';
-  const hashValue = getHash();
+  // const hashValue = getHash(); // TODO CHECKX uncomment?
   const backup = getLocalStorage();
   let useBackup = false;
 
   setDefaultOptions();
   expose();
 
-  let defaultValue = [
-    'function foo(bar: number): string {',
-    '    return `${bar}`;',
+  // TODO CHECKX: pull in .ts code from a file
+  let tsDefaultValue = [
+    'class TodoApp extends React.Component {',
+      'constructor(props) {',
+        'super(props)',
+        'this.state = {',
+          'items: [',
+            '{ text: "Learn JavaScript", done: false },',
+            '{ text: "Learn React", done: false },',
+            '{ text: "Play around in JSFiddle", done: true },',
+            '{ text: "Build something awesome", done: true }',
+          ']',
+        '}',
+     '}',
+      '',
+      'render() {',
+        'return (',
+          '<div>',
+            '<h2>Todos:</h2>',
+            '<ol>',
+            '{this.state.items.map(item => (',
+              '<li key={item.id}>',
+                '<label>',
+                  '<input type="checkbox" disabled readOnly checked={item.done} /> ',
+                  '<span className={item.done ? "done" : ""}>{item.text}</span>',
+                '</label>',
+              '</li>',
+            '))}',
+            '</ol>',
+          '</div>',
+        ')',
+      '}',
+    '}',
+    'ReactDOM.render(<TodoApp />, document.querySelector("#app"))',
+    ''
+  ].join('\n');
+
+  // TODO CHECKX: pull in .html code from a file
+  let htmlDefaultValue = [
+    '<div id="app"></div>',
+    ''
+  ].join('\n');
+
+  // TODO CHECKX: pull in .less code from a file
+  let lessDefaultValue = [
+    'body {',
+    '    background: #20262E;',
+    '    font-family: Helvetica;',
+    '    padding: 20px;',
+    '}',
+    '#app {',
+    '    background: #ff00ff;',
+    '    border-radius: 4px;',
+    '    padding: 20px;',
+    '    transition: all 0.2s;',
+    '}',
+    'li {',
+    '    margin: 8px 0;',
+    '}',
+    'h2 {',
+    '    font-weight: bold;',
+    '    margin-bottom: 15px;',
+    '}',
+    '.done {',
+    '    color: rgba(0, 0, 0, 0.3);',
+    '    text-decoration: line-through;',
+    '}',
+    'input {',
+    '    margin-right: 5px;',
     '}',
     ''
   ].join('\n');
@@ -140,23 +210,26 @@ function init(editor: any): void {
     }
   }
 
-  if (hashValue && !!hashValue.editor) {
-    defaultValue = hashValue.editor;
-  } else if (useBackup && backup && !!backup.editor) {
-    defaultValue = backup.editor;
-  }
+  // TODO CHECKX uncomment?
+  // // if (hashValue && !!hashValue.editor) {
+  // //   tsDefaultValue = hashValue.editor;
+  // // } else if (useBackup && backup && !!backup.editor) {
+  // //   tsDefaultValue = backup.editor;
+  // // }
 
-  if (hashValue && hashValue.options) {
-    setOptions(hashValue.options);
-  } else if (useBackup && backup && backup.options) {
-    setOptions(backup.options);
-  }
+  // TODO CHECKX uncomment?
+  // // if (hashValue && hashValue.options) {
+  // //   setOptions(hashValue.options);
+  // // } else if (useBackup && backup && backup.options) {
+  // //   setOptions(backup.options);
+  // // }
 
   updateCompilerOptions();
 
   tsEditor = monaco.editor.create(_editorTs, {
-    value: defaultValue,
+    value: tsDefaultValue,
     language: 'typescript',
+    theme: 'vs-light',
     automaticLayout: true,
     minimap: {
       enabled: false
@@ -170,6 +243,7 @@ function init(editor: any): void {
       ''
     ].join('\n'),
     language: 'javascript',
+    theme: 'hc-black',
     readOnly: true,
     automaticLayout: true,
     minimap: {
@@ -187,6 +261,28 @@ function init(editor: any): void {
     //   seedSearchStringFromSelection: false,
     //   autoFindInSelection: false
     // }
+  });
+
+  htmlEditor = monaco.editor.create(_editorHtml, {
+    value: htmlDefaultValue,
+    language: 'html',
+    theme: 'vs-light',
+    automaticLayout: true,
+    minimap: {
+      enabled: false
+    },
+    selectionClipboard: false
+  });
+
+  lessEditor = monaco.editor.create(_editorLess, {
+    value: lessDefaultValue,
+    language: 'less',
+    theme: 'vs-light',
+    automaticLayout: true,
+    minimap: {
+      enabled: false
+    },
+    selectionClipboard: false
   });
 
   ready();
@@ -449,6 +545,8 @@ function prepareWindowCode(html: string): string {
 }
 
 function getWindowCode(html?: string): string {
+  console.log('html' + htmlEditor.getValue()); // CHECKX TODO integrate HTML
+  console.log('less' + lessEditor.getValue()); // CHECKX TODO integrate LESS
   html = html !== void 0
    ? html : options().windowOptions.console
    ? runWindowCodeConsole : runWindowCodePlain;
