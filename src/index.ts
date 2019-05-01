@@ -1,9 +1,8 @@
 import * as ts from 'typescript';
-// import * as debounce from 'lodash.debounce';
 import debounce = require('lodash.debounce');
-import * as runWindowHtmlConsole from './run-console.html';
-import * as runWindowHtmlPlain from './run-plain.html';
-import * as fs from 'file-system';
+import runWindowHtmlConsole = require('./run-console.html');
+import runWindowHtmlPlain = require('./run-plain.html');
+import fs = require('file-system');
 
 declare global {
     interface Window {
@@ -522,8 +521,9 @@ function prepareWindowCode(html: string): string {
 }
 
 function getWindowCode(html?: string): string {
-  console.log('html' + htmlEditor.getValue()); // CHECKX TODO integrate HTML
-  console.log('less' + lessEditor.getValue()); // CHECKX TODO integrate LESS
+  console.log("getWindowCodegetWindowCode");
+  // // console.log('html' + htmlEditor.getValue()); // CHECKX TODO integrate HTML
+  // // console.log('less' + lessEditor.getValue()); // CHECKX TODO integrate LESS
 
   // Use 'fs' to generate a file to be run by run-console.html
   let generatedCodeTemplate = [

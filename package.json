@@ -31,17 +31,12 @@
     "source-map-loader": "^0.2.1",
     "ts-loader": "^5.0.0",
     "typescript": "^3.0.1",
-    "uglify-js": "^3.4.0",
-    "uglifyjs-webpack-plugin": "^1.2.5",
-    "webpack": "^4.30.0",
-    "webpack-cli": "^3.3.1",
-    "webpack-stream": "^5.1.1"
+    "uglify-js": "^3.4.0"
   },
   "scripts": {
     "build": "node_modules/.bin/gulp build",
     "watch": "node_modules/.bin/gulp watch",
-    "serve": "node_modules/.bin/live-server ./docs",
-    "webpack": "webpack"
+    "serve": "node_modules/.bin/live-server ./docs"
   },
   "repository": {
     "type": "git",

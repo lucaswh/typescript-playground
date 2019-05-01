@@ -1,6 +1,4 @@
-const path = require('path');
-const webpack = require('webpack');
-const UglifyJSPlugin = require("uglifyjs-webpack-plugin");
+const path = require('path')
 const pkg = require('./package.json');
 const monacoEditorPkg = require('monaco-typescript/package.json');
 
@@ -32,10 +30,12 @@ config.typescript = {
   compilerOptions: {
     sourceMap: true,
     rootDir: 'src',    
-    module: "esnext",
+    module: "commonjs",
     target: "ES5",
     noEmit: false,
     declaration: false,
+    allowSyntheticDefaultImports: true,
+    esModuleInterop: true
   }
 };
 
@@ -65,7 +65,7 @@ config.webpack = {
       }, {
         test: /\.tsx?$/,
         exclude: /(node_modules|(\.d\.ts$))/,
-        loader: 'ts-loader',
+        loader: 'awesome-typescript-loader',
         options: config.typescript
       }, {
         test: /\.html/,
@@ -74,11 +74,6 @@ config.webpack = {
     ]
   },
   optimization: {
-    minimizer: [
-      new UglifyJSPlugin({
-        sourceMap: true
-      })
-    ]
   }
 };
 
