@@ -32,7 +32,7 @@ config.typescript = {
   compilerOptions: {
     sourceMap: true,
     rootDir: 'src',    
-    module: "commonjs",
+    module: "esnext",
     target: "ES5",
     noEmit: false,
     declaration: false,

@@ -1,7 +1,9 @@
 import * as ts from 'typescript';
+// import * as debounce from 'lodash.debounce';
 import debounce = require('lodash.debounce');
-import runWindowHtmlConsole = require('./run-console.html');
-import runWindowHtmlPlain = require('./run-plain.html');
+import * as runWindowHtmlConsole from './run-console.html';
+import * as runWindowHtmlPlain from './run-plain.html';
+import * as fs from 'file-system';
 
 declare global {
     interface Window {
@@ -121,38 +123,12 @@ function init(editor: any): void {
 
   // TODO CHECKX: pull in .ts code from a file
   let tsDefaultValue = [
-    'class TodoApp extends React.Component {',
-      'constructor(props) {',
-        'super(props)',
-        'this.state = {',
-          'items: [',
-            '{ text: "Learn JavaScript", done: false },',
-            '{ text: "Learn React", done: false },',
-            '{ text: "Play around in JSFiddle", done: true },',
-            '{ text: "Build something awesome", done: true }',
-          ']',
-        '}',
-     '}',
-      '',
+    'class Hello extends React.Component {',
       'render() {',
-        'return (',
-          '<div>',
-            '<h2>Todos:</h2>',
-            '<ol>',
-            '{this.state.items.map(item => (',
-              '<li key={item.id}>',
-                '<label>',
-                  '<input type="checkbox" disabled readOnly checked={item.done} /> ',
-                  '<span className={item.done ? "done" : ""}>{item.text}</span>',
-                '</label>',
-              '</li>',
-            '))}',
-            '</ol>',
-          '</div>',
-        ')',
+        'return React.createElement(\'div\', null, `Hello ${this.props.toWhat}`)',
       '}',
     '}',
-    'ReactDOM.render(<TodoApp />, document.querySelector("#app"))',
+    'ReactDOM.render(React.createElement(Hello, {toWhat: \'World\'}, null), document.getElementById(\'root\'));',
     ''
   ].join('\n');
 
@@ -539,6 +515,7 @@ function updateCompilerOptions(): void {
 }
 
 function prepareWindowCode(html: string): string {
+  console.log("HTML__: \n" + html);
   return html
     .replace(new RegExp(/__BASE__/), window.location.href.split('#')[0].replace(/\/?$/, '/'))
     .replace(new RegExp(/__VERSION__/g), '/* @echo VERSION */');
@@ -547,10 +524,26 @@ function prepareWindowCode(html: string): string {
 function getWindowCode(html?: string): string {
   console.log('html' + htmlEditor.getValue()); // CHECKX TODO integrate HTML
   console.log('less' + lessEditor.getValue()); // CHECKX TODO integrate LESS
-  html = html !== void 0
-   ? html : options().windowOptions.console
-   ? runWindowCodeConsole : runWindowCodePlain;
-  return html.replace(/__CODE__/, jsEditor.getValue())
+
+  // Use 'fs' to generate a file to be run by run-console.html
+  let generatedCodeTemplate = [
+  "(function() {",
+  "  __CODE__",
+  "})();"].join("\n");
+  let generatedCode = generatedCodeTemplate.replace(/__CODE__/, jsEditor.getValue())
+  fs.writeFileSync('generatedCode.js', generatedCode, function(err) {
+    if(err) {
+        return console.log(err);
+    }
+    console.log("The file was saved!");
+  });
+
+  // TODO CHECKX remove?
+  // // html = html !== void 0
+  // //  ? html : options().windowOptions.console
+  // //  ? runWindowCodeConsole : runWindowCodePlain;
+  // // return html.replace(/__CODE__/, jsEditor.getValue())
+  return generatedCode;
 }
 
 function setOptions(opts: { [index: string]: any }, base = options()) {

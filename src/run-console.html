@@ -31,12 +31,17 @@
   </div>
 
   <script src="run.js?__VERSION__"></script>
-
-  <script id="code">
+  <script src="https://requirejs.org/docs/release/2.3.6/comments/require.js"></script>
+  <!-- Load React. -->
+  <!-- Note: when deploying, replace "development.js" with "production.min.js". -->
+  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+  <!-- <script id="code">
     (function() {
       __CODE__
     })();
-  </script>
+  </script> -->
+  <script src="generatedCode.js?_"></script>
   <script>
     tsp.fadeOut(document.getElementById('loading-window'));
   </script>
