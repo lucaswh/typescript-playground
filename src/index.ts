@@ -121,38 +121,21 @@ function init(editor: any): void {
 
   // TODO CHECKX: pull in .ts code from a file
   let tsDefaultValue = [
-    'class TodoApp extends React.Component {',
-      'constructor(props) {',
-        'super(props)',
-        'this.state = {',
-          'items: [',
-            '{ text: "Learn JavaScript", done: false },',
-            '{ text: "Learn React", done: false },',
-            '{ text: "Play around in JSFiddle", done: true },',
-            '{ text: "Build something awesome", done: true }',
-          ']',
-        '}',
-     '}',
-      '',
-      'render() {',
-        'return (',
-          '<div>',
-            '<h2>Todos:</h2>',
-            '<ol>',
-            '{this.state.items.map(item => (',
-              '<li key={item.id}>',
-                '<label>',
-                  '<input type="checkbox" disabled readOnly checked={item.done} /> ',
-                  '<span className={item.done ? "done" : ""}>{item.text}</span>',
-                '</label>',
-              '</li>',
-            '))}',
-            '</ol>',
-          '</div>',
-        ')',
-      '}',
-    '}',
-    'ReactDOM.render(<TodoApp />, document.querySelector("#app"))',
+    "interface Person {",
+    "    firstName: string;",
+    "    lastName:  string;",
+    "}",
+    "",
+    "function greeter(person: Person) {",
+    "    return \"Hello, \" + person.firstName + \" \" + person.lastName;",
+    "}",
+    "",
+    "let user = {",
+    "    firstName: \"Malcolm\",",
+    "    lastName:  \"Reynolds\"",
+    "};",
+    "",
+    "document.querySelector(\"#app\").innerHTML = greeter(user);",
     ''
   ].join('\n');
 
@@ -173,21 +156,8 @@ function init(editor: any): void {
     '    background: #ff00ff;',
     '    border-radius: 4px;',
     '    padding: 20px;',
+    '    text-align: center;',
     '    transition: all 0.2s;',
-    '}',
-    'li {',
-    '    margin: 8px 0;',
-    '}',
-    'h2 {',
-    '    font-weight: bold;',
-    '    margin-bottom: 15px;',
-    '}',
-    '.done {',
-    '    color: rgba(0, 0, 0, 0.3);',
-    '    text-decoration: line-through;',
-    '}',
-    'input {',
-    '    margin-right: 5px;',
     '}',
     ''
   ].join('\n');
@@ -434,6 +404,7 @@ function runCode(): void {
 
   setTimeout(() => {
     win.document.open()
+    win.document.write(htmlEditor.getValue());
     win.document.write(getWindowCode());
     win.document.close();
     win.onunload = windowUnloaded;
@@ -545,11 +516,10 @@ function prepareWindowCode(html: string): string {
 }
 
 function getWindowCode(html?: string): string {
-  console.log('html' + htmlEditor.getValue()); // CHECKX TODO integrate HTML
+  console.log("HTML\n" + document.getElementById('injectedHtmlCode'));
   console.log('less' + lessEditor.getValue()); // CHECKX TODO integrate LESS
   html = html !== void 0
-   ? html : options().windowOptions.console
-   ? runWindowCodeConsole : runWindowCodePlain;
+   ? html : (options().windowOptions.console ? runWindowCodeConsole : runWindowCodePlain);
   return html.replace(/__CODE__/, jsEditor.getValue())
 }
 
