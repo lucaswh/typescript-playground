@@ -131,8 +131,8 @@ function init(editor: any): void {
     "}",
     "",
     "let user = {",
-    "    firstName: \"Malcolm\",",
-    "    lastName:  \"Reynolds\"",
+    "    firstName: \"Bob\",",
+    "    lastName:  \"Bobson\"",
     "};",
     "",
     "document.querySelector(\"#app\").innerHTML = greeter(user);",
@@ -406,7 +406,7 @@ function runCode(): void {
     win.document.open()
     
     // Write the html to the window
-    let htmlValue = "<div id=\"injectedHtmlCode\">" + htmlEditor.getValue()  + "</div>";
+    let htmlValue = "<div id=\"injectedHtmlCode\" style=\"style.css\">" + htmlEditor.getValue()  + "</div>";
     win.document.write(htmlValue);
 
     // Write the js to the window
