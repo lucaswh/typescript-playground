@@ -67,7 +67,14 @@ config.webpack = {
         exclude: /(node_modules|(\.d\.ts$))/,
         loader: 'ts-loader',
         options: config.typescript
-      }, {
+      },{
+        test: /\.css$/,
+        loader: 'css-loader',
+        options: {
+          modules: true,
+          hashPrefix: 'hash'
+        }
+      },{
         test: /\.html/,
         use: 'raw-loader'
       }

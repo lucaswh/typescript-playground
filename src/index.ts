@@ -404,8 +404,14 @@ function runCode(): void {
 
   setTimeout(() => {
     win.document.open()
-    win.document.write(htmlEditor.getValue());
+    
+    // Write the html to the window
+    let htmlValue = "<div id=\"injectedHtmlCode\">" + htmlEditor.getValue()  + "</div>";
+    win.document.write(htmlValue);
+
+    // Write the js to the window
     win.document.write(getWindowCode());
+
     win.document.close();
     win.onunload = windowUnloaded;
   }, 50);
@@ -516,10 +522,7 @@ function prepareWindowCode(html: string): string {
 }
 
 function getWindowCode(html?: string): string {
-  console.log("HTML\n" + document.getElementById('injectedHtmlCode'));
-  console.log('less' + lessEditor.getValue()); // CHECKX TODO integrate LESS
-  html = html !== void 0
-   ? html : (options().windowOptions.console ? runWindowCodeConsole : runWindowCodePlain);
+  html = html !== void 0 ? html : (options().windowOptions.console ? runWindowCodeConsole : runWindowCodePlain);
   return html.replace(/__CODE__/, jsEditor.getValue())
 }
 
