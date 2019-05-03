@@ -65,7 +65,7 @@ config.webpack = {
       }, {
         test: /\.tsx?$/,
         exclude: /(node_modules|(\.d\.ts$))/,
-        loader: 'ts-loader',
+        loader: 'awesome-typescript-loader',
         options: config.typescript
       }, {
         test: /\.html/,

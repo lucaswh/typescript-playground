@@ -1,7 +1,10 @@
 import * as ts from 'typescript';
+import fs = require('fs');
 import debounce = require('lodash.debounce');
-import runWindowHtmlConsole = require('./run-console.html');
-import runWindowHtmlPlain = require('./run-plain.html');
+import runWindowHtmlIFrame = require('./run-iframe.html');
+
+// // import runWindowHtmlConsole = require('./run-console.html');
+// // import runWindowHtmlPlain = require('./run-plain.html');
 
 declare global {
     interface Window {
@@ -44,8 +47,10 @@ let htmlEditor: monaco.editor.IStandaloneCodeEditor;
 let lessEditor: monaco.editor.IStandaloneCodeEditor;
 let runWindow: Window;
 
-const runWindowCodeConsole = prepareWindowCode(runWindowHtmlConsole);
-const runWindowCodePlain = prepareWindowCode(runWindowHtmlPlain);
+// TODO CHECKX - remove?
+// // const runWindowCodeConsole = prepareWindowCode(runWindowHtmlConsole);
+// // const runWindowCodePlain = prepareWindowCode(runWindowHtmlPlain);
+const runWindowCodeIFrame = prepareWindowCode(runWindowHtmlIFrame);
 
 const _tsVersion = document.getElementById('ts-version');
 const _editorJs = document.getElementById('editor-js');
@@ -392,7 +397,7 @@ function runCode(): void {
 
   if (!runWindow || runWindow.closed) {
     windowOpened();
-    win = window.open('about:blank', '', 'width=800,height=600');
+    win = window.open('run-iframe.html', '', 'width=800,height=600');
     runWindow = win;
   } else {
     win = runWindow;
@@ -400,15 +405,24 @@ function runCode(): void {
   }
 
   win.onunload = null;
-  win.location.href = 'about:blank'
+  win.location.href = 'run-iframe.html'
 
+  updateRunFile();
+
+  // TODO CHECKX - instead of launching a blank new window, launch the url of the run-iframe and write the code to that!
   setTimeout(() => {
     win.document.open()
-    win.document.write(htmlEditor.getValue());
+    // win.document.write(htmlEditor.getValue());
     win.document.write(getWindowCode());
     win.document.close();
     win.onunload = windowUnloaded;
   }, 50);
+}
+
+function updateRunFile() {
+  var data = fs.readFileSync('run-console.html', 'utf-8');
+  console.log(data);
+  fs.writeFileSync('run-console.html', newValue, 'utf-8');
 }
 
 function windowOpened() {
@@ -516,11 +530,13 @@ function prepareWindowCode(html: string): string {
 }
 
 function getWindowCode(html?: string): string {
-  console.log("HTML\n" + document.getElementById('injectedHtmlCode'));
-  console.log('less' + lessEditor.getValue()); // CHECKX TODO integrate LESS
-  html = html !== void 0
-   ? html : (options().windowOptions.console ? runWindowCodeConsole : runWindowCodePlain);
-  return html.replace(/__CODE__/, jsEditor.getValue())
+  // TODO CHECKX - only using window with console
+  // // html = html !== void 0 ? html : (options().windowOptions.console ? runWindowCodeConsole : runWindowCodePlain);
+  html = html !== void 0 ? html : runWindowCodeIFrame;
+  html = html.replace(/__CODE__/, jsEditor.getValue());
+  console.log("getWindowCode\n");
+  console.log(html);
+  return html;
 }
 
 function setOptions(opts: { [index: string]: any }, base = options()) {

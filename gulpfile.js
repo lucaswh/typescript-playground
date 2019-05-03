@@ -41,8 +41,20 @@ function clean(done) {
   ]).then(() => done());
 }
 
-function html() {
+function indexhtml() {
   return gulp.src([`${config.paths.src}/index.html`])
+    .pipe(preprocess({ context: config.replace }))
+    .pipe(gulp.dest(config.paths.dest));
+}
+
+function runconsolehtml() {
+  return gulp.src([`${config.paths.src}/run-console.html`])
+    .pipe(preprocess({ context: config.replace }))
+    .pipe(gulp.dest(config.paths.dest));
+}
+
+function runiframehtml() {
+  return gulp.src([`${config.paths.src}/run-iframe.html`])
     .pipe(preprocess({ context: config.replace }))
     .pipe(gulp.dest(config.paths.dest));
 }
@@ -76,7 +88,7 @@ function watch() {
 const build = gulp.series(
   clean,
   gulp.parallel(
-    assets, copy, html, scripts, styles
+    assets, copy, indexhtml, runconsolehtml, runiframehtml, scripts, styles
   )
 );
 

@@ -2,9 +2,14 @@
   "name": "typescript-playground",
   "version": "1.6.4",
   "description": "TypeScript Playground",
-  "dependencies": {},
+  "dependencies": {
+    "awesome-typescript-loader": "^5.2.1",
+    "file-system": "^2.2.2",
+    "fs-extra": "^7.0.1"
+  },
   "devDependencies": {
     "@types/lodash.debounce": "^4.0.2",
+    "@types/node": "^11.13.9",
     "add": "^2.0.6",
     "babel-core": "^6.26.0",
     "babel-preset-env": "^1.6.0",

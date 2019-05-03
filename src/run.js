@@ -1,3 +1,4 @@
+// let tsp = {options: {}}; CHECKX TODO - remove?
 if (!tsp.initialized) {
   tsp.getElement = function getElement() {
     return document.getElementById('console-content');
